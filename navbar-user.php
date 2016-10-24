@@ -8,7 +8,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand page-scroll" href="#page-top">CSVolunteer</a>
+            <a class="navbar-brand page-scroll" href="index.php#page-top">CSVolunteer</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -18,7 +18,7 @@
                     <a href="#page-top"></a>
                 </li>
                 <li>
-                    <a class="page-scroll" href="#">Events</a>
+                    <a class="page-scroll" href="events.php">Events</a>
                 </li>
                 <li>
                     <a class="page-scroll" href="#">Volunteer of the month</a>

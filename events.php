@@ -58,16 +58,14 @@
   <!-- Navigation -->
   <?php echo $nav; ?>
 
-    <!-- Header -->
-    <header>
-        <div class="container">
-            <div class="intro-text">
-                <div class="intro-lead-in">CS Volunteer</div>
-                <div class="intro-heading">Volunteer Oportunities</div>
-                <a href="events.php" class="page-scroll btn btn-xl">Find Events</a>
-            </div>
+    <section>
+      <div class="container">
+        <div class="row">
+          <h3>Events</h3>
+
         </div>
-    </header>
+      </div>
+    </section>
     <footer>
         <div class="container">
             <div class="row">
@@ -113,6 +111,24 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="js/agency.js"></script>
+
+    <script>
+    var template = '<div class="col-sm-6 col-lg-6 col-md-6">'+
+      '<div class="thumbnail">'+
+          '<img src="http://placehold.it/500x300" alt="">'+
+          '<div class="caption">'+
+              '<h4><a href="#" class="title">Some event</a>'+
+              '</h4>'+
+              '<p>See more information about this event by clicking <a href="#">here</a>.</p>'+
+          '</div>'+
+      '</div>'+
+    '</div>';
+    $(document).ready(function(){
+      //do stuff
+      $.get('eventHandler.php', {'all':true}, function(data){
+        console.log(data);
+      }, 'json');
+    });
 
 </body>
 
