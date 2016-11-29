@@ -1,16 +1,11 @@
 <?php
   session_start();
-  if(!isset($_SESSION['user_id'])){
-    header('Location: login.html');
-    exit();
-  }
-  else if($_SESSION['user_type'] == "admin"){
-    //is admin
-    $nav = file_get_contents('navbar-admin.php');
+  if(isset($_SESSION['user_id'])){
+    $nav = 'navbar-loggedin.php';
   }
   else {
     //isnt admin
-    $nav = file_get_contents('navbar-user.php');
+    $nav = 'navbar-user.php';
   }
 ?>
 <!DOCTYPE html>
@@ -56,7 +51,7 @@
 <body id="page-top" class="index">
 
   <!-- Navigation -->
-  <?php echo $nav; ?>
+  <?php include $nav; ?>
 
     <section>
       <div class="container">
@@ -130,7 +125,8 @@
           var events = data.events;
           events.forEach(function(e, i){
             var $template = $(template);
-            $template.find('.location').text(e[4]);
+            $template.find('.location').text(e[5]);
+            $template.find('.title').text(e[1]);
             $template.find('a').attr('href', 'event.php?id=' + e[0]);
             $('#event-holder').append($template);
           })

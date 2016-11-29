@@ -1,16 +1,11 @@
 <?php
   session_start();
-  if(!isset($_SESSION['loggedin']) OR !$_SESSION['loggedin']){
-    header('Location: login.html');
-    exit();
-  }
-  else if($_SESSION['admin']){
-    //is admin
-    $nav = file_get_contents('navbar-admin.php');
+  if(isset($_SESSION['user_id'])){
+    $nav = 'navbar-admin.php';
   }
   else {
     //isnt admin
-    $nav = file_get_contents('navbar-user.php');
+    $nav = 'navbar-user.php';
   }
   require("config.php");
   $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE);
@@ -64,7 +59,7 @@
 <body id="page-top" class="index">
 
   <!-- Navigation -->
-  <?php echo $nav; ?>
+  <?php include $nav; ?>
 
     <section>
       <div class="container">

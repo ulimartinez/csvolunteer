@@ -61,18 +61,25 @@
           <h4 class="modal-title">Create Administrator</h4>
         </div>
         <div class="modal-body">
-          <form id="userForm" action="userHandler.php">
+          <form id="adminForm" action="userHandler.php">
             <div class="form-group">
-              <label for="userName" class="col-sm-2 control-label">Name</label>
+              <label for="adminUsername" class="col-sm-2 control-label">Username</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="userName" placeholder="name" name="name">
+                <input type="text" class="form-control" id="adminUsername" placeholder="name" name="username">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="adminpwd" class="col-sm-2 control-label">Password</label>
+              <div class="col-sm-10">
+                <input type="password" class="form-control" id="adminpwd" placeholder="name" name="password">
+                <input type="hidden" style="display: none;" name="create" value="admin">
               </div>
             </div>
           </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" class="saveUser">Save changes</button>
+          <button type="button" class="btn btn-primary saveUser">Save changes</button>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -99,7 +106,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" class="saveUser">Save changes</button>
+          <button type="button" class="btn btn-primary saveUser" >Save changes</button>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -126,7 +133,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" class="saveUser">Save changes</button>
+          <button type="button" class="btn btn-primary saveUser">Save changes</button>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -153,7 +160,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" class="saveUser">Save changes</button>
+          <button type="button" class="btn btn-primary saveUser">Save changes</button>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -303,28 +310,21 @@
     <script src="js/agency.js"></script>
 
     <script>
-    var template = '<div class="col-sm-6 col-lg-6 col-md-6">'+
-      '<div class="thumbnail">'+
-          '<img src="http://placehold.it/500x300" alt="">'+
-          '<div class="caption">'+
-              '<h4><a href="#" class="title">Some event</a>'+
-              '</h4><small class="location"></small>'+
-              '<p>See more information about this event by clicking <a class="link" href="#">here</a>.</p>'+
-          '</div>'+
-      '</div>'+
-    '</div>';
     $(document).ready(function(){
-      //do stuff
-      $.get('eventHandler.php', {'all':true}, function(data){
-        if(data.hasOwnProperty('events')){
-          var events = data.events;
-          events.forEach(function(e, i){
-            var $template = $(template);
-            $template.find('.location').text(e[4]);
-            $template.find('a').attr('href', 'event?id=' + e[0]);
-            $('#event-holder').append($template);
-          })
-        }
+      $('.saveUser').click(function(e){
+        console.log("Hi");
+        var $form = $(this).parent().siblings('.modal-body').find('form')[0];
+        var formdata = new FormData($form);
+          $.ajax({
+          	'method':'post',
+          	'url':$form.action,
+          	'data':formdata,
+          	'contentType': false,
+          	'processData': false,
+          	'success':function(responsedata){
+          		$('#myModal').modal('hide');
+          	}
+          });
       });
     });
     </script>

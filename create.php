@@ -33,6 +33,11 @@
     <link href="css/agency.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet">
 
+    <!-- datepicker -->
+    <link href='css/clockpicker.css' rel='stylesheet' />
+    <!-- date picker -->
+    <link href="http://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css" rel="stylesheet" type="text/css">
+
     <!-- Custom Fonts -->
     <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
@@ -50,112 +55,139 @@
 </head>
 
 <body id="page-top" class="index">
-  <!-- user modal-->
-  <div class="modal fade" id="userModal">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h4 class="modal-title">Create User</h4>
-      </div>
-      <div class="modal-body">
-        <form id="userForm" action="studentHandler.php">
-          <div class="form-group">
-            <label for="userName" class="col-sm-2 control-label">Name</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" id="userName" placeholder="name" name="name">
-            </div>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="saveUser">Save changes</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-<!-- event modal-->
-<div class="modal fade" id="eventModal">
-<div class="modal-dialog" role="document">
-  <div class="modal-content">
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-      <h4 class="modal-title">Create Event</h4>
-    </div>
-    <div class="modal-body">
-      <form id="userForm" action="eventHandler.php">
-        <div class="form-group">
-          <label for="eventName" class="col-sm-2 control-label">Name</label>
-          <div class="col-sm-10">
-            <input type="text" class="form-control" id="eventName" placeholder="name" name="name">
-          </div>
-        </div>
-      </form>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      <button type="button" class="btn btn-primary" id="saveUser">Save changes</button>
-    </div>
-  </div><!-- /.modal-content -->
-</div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
   <!-- Navigation -->
-  <?php echo $nav; ?>
+  <?php include 'navbar-loggedin.php'; ?>
 
     <section>
+      <!-- Page Content -->
       <div class="container">
-        <div class="row">
-          <div class="col-lg-6 col-md-6">
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-xs-3">
-                            <i class="fa fa-user fa-5x"></i>
-                        </div>
-                        <div class="col-xs-9 text-right">
-                            <div class="huge"></div>
-                            <div>Create User</div>
-                        </div>
-                    </div>
-                </div>
-                <a data-toggle="modal" href="#userModal">
-                    <div class="panel-footer">
-                        <span class="pull-left">Start</span>
-                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                        <div class="clearfix"></div>
-                    </div>
-                </a>
-            </div>
+
+          <!-- Page Heading/Breadcrumbs -->
+          <div class="row">
+              <div class="col-lg-12">
+                  <h1 id="event-title" class="page-header">New Event</h1>
+                  <ol class="breadcrumb">
+                      <li><a href="index.php">Home</a>
+                      </li>
+                      <li class="active">Create Event</li>
+                  </ol>
+              </div>
           </div>
-        <div class="col-lg-6 col-md-6">
-          <div class="panel panel-primary">
-              <div class="panel-heading">
-                  <div class="row">
-                      <div class="col-xs-3">
-                          <i class="fa fa-calendar fa-5x"></i>
+          <!-- /.row -->
+
+          <!-- Image Header -->
+          <div class="row">
+              <div class="col-lg-12 text-center">
+                  <img class="img-responsive image" id="picture" src="http://placehold.it/1200x300" alt="">
+              </div>
+          </div>
+          <input type="file" id="file" name="file" accept="image/*" style="display: none;" hidden autocomplete="off" />
+          <!-- /.row -->
+
+          <!-- Service Tabs -->
+          <div class="row">
+              <div class="col-lg-12">
+                  <h2 class="page-header">Properties</h2>
+              </div>
+              <div class="col-lg-12">
+
+                  <ul id="myTab" class="nav nav-tabs nav-justified">
+                      <li class="active"><a href="#service-one" data-toggle="tab"><i class="fa fa-pencil"></i> Event Name</a>
+                      </li>
+                      <li class=""><a href="#service-two" data-toggle="tab"><i class="fa fa-clock-o"></i> Date &amp; Time</a>
+                      </li>
+                      <li class=""><a href="#service-three" data-toggle="tab"><i class="fa fa-list"></i> Time Slots</a>
+                      </li>
+                      <li class=""><a href="#service-four" data-toggle="tab"><i class="fa fa-ellipsis-v"></i> Skills</a>
+                      </li>
+                  </ul>
+
+                  <div id="myTabContent" class="tab-content">
+                      <div class="tab-pane fade active in" id="service-one">
+                          <h4>Event Name</h4>
+                          <form>
+                          	<div class="form-group">
+                          		<label for="title">Event Title:</label>
+                          		<input type="text" class="form-control" id="title" />
+                          	</div>
+                            <div class="form-group">
+                          		<label for="title">Event Location:</label>
+                          		<input type="text" class="form-control" id="place" />
+                          	</div>
+                          </form>
                       </div>
-                      <div class="col-xs-9 text-right">
-                          <div>Create Event</div>
+                      <div class="tab-pane fade" id="service-three">
+                          <h4>Time Slots</h4>
+                          <form>
+                            <div class="row">
+                            	<div class="form-group">
+                            		<label for="numSlots">Number of Slots:</label>
+                                    <input class="form-control" type="number" id="numSlots" min="1" value="1"/>
+                            	</div>
+                            </div>
+                            <div id="slotsWrapper">
+                          	<div class="row slotsInputGroup">
+                            		<div class="form-group col-sm-5">
+                                  <div class="input-group">
+                                    <span class="input-group-addon">Start</span>
+                                    <input type="text" class="form-control timeSlotStart" placehold="Start time" value=""/>
+                                  </div>
+                                </div>
+                                <div class="form-group col-sm-5">
+                                  <div class="input-group">
+                                    <span class="input-group-addon">End</span>
+                                    <input type="text" class="form-control timeSlotEnd" placehold="End time" value=""/>
+                                  </div>
+                                </div>
+                                <div class="form-group col-sm-2">
+                                  <div class="input-group">
+                                    <span class="input-group-addon"># Required</span>
+                                    <input type="number" class="form-control timeSlotSpots" value="1"/>
+                                  </div>
+                                </div>
+                            	</div>
+                            </div>
+                          </form>
                       </div>
+                      <div class="tab-pane fade" id="service-two">
+  							<h4>Date &amp; Time</h4>
+  							<div class="container">
+  								<div class="row">
+  									<div class='col-sm-6'>
+  										<div class="form-group">
+  											<div class='input-group date'>
+  												<input type='text' class="form-control" id="datetimepicker" />
+  												<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span> </span>
+  											</div>
+  										</div>
+  									</div>
+  								</div>
+  							</div>
+  						</div>
+                      <div class="tab-pane fade" id="service-four">
+                          <h4>Skills Required</h4>
+                          <textarea class="form-control" placeholder="skill1, skill2, skill3..." rows="3" id="description"></textarea>
+                      </div>
+                  </div>
+
+              </div>
+          </div>
+
+          <hr>
+          <!-- TODO: remove delete if its a new event? -->
+          <a href="#" id="delete" class="btn btn-danger btn-lg pull-left">Delete</a>
+          <a href="#" id="save" class="btn btn-primary btn-lg pull-right">Save</a>
+          <!-- Footer -->
+          <footer>
+              <div class="row">
+                  <div class="col-lg-12">
+                      <p>Copyright &copy; Your Website 2014</p>
                   </div>
               </div>
-              <a data-toggle="modal" href="#eventModal">
-                  <div class="panel-footer">
-                      <span class="pull-left">Start</span>
-                      <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                      <div class="clearfix"></div>
-                  </div>
-              </a>
-          </div>
-        </div>
+          </footer>
+
       </div>
-      </div>
+      <!-- /.container -->
     </section>
     <footer>
         <div class="container">
@@ -200,31 +232,96 @@
     <script src="js/jqBootstrapValidation.js"></script>
     <script src="js/contact_me.js"></script>
 
-    <!-- Custom Theme JavaScript -->
-    <script src="js/agency.js"></script>
+    <!-- date picker -->
+    <script src='js/moment.js'></script>
+    <script src="js/clockpicker.js"></script>
+    <!--date picker -->
+    <script src="http://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
 
     <script>
-    var template = '<div class="col-sm-6 col-lg-6 col-md-6">'+
-      '<div class="thumbnail">'+
-          '<img src="http://placehold.it/500x300" alt="">'+
-          '<div class="caption">'+
-              '<h4><a href="#" class="title">Some event</a>'+
-              '</h4><small class="location"></small>'+
-              '<p>See more information about this event by clicking <a class="link" href="#">here</a>.</p>'+
-          '</div>'+
-      '</div>'+
-    '</div>';
+    $('#picture').click(function(e){
+      $('#file').click();
+    });
+    function readURL(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          $('#picture').attr('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+    function setTimepickers($group){
+      var $start = $group.find('.timeSlotStart');
+      var $end = $group.find('.timeSlotEnd');
+      $start.clockpicker({
+          placement: 'bottom',
+          align: 'left',
+          donetext: 'Done',
+          autoclose: true
+      });
+      $end.clockpicker({
+          placement: 'bottom',
+          align: 'left',
+          donetext: 'Done',
+          autoclose: true
+      });
+      return true;
+    }
+    function placeInputGroups(num){
+      var $template = $($('#slotsWrapper').children('.slotsInputGroup')[0]);
+      console.log(num);
+      $('#slotsWrapper').empty();
+      for(var i = 0; i < num; i++){
+        $group = $template.clone();
+        setTimepickers($group);
+        $group.appendTo('#slotsWrapper');
+      }
+    }
+    function getSlot(index){
+      var $group = $($('#slotsWrapper').children('.slotsInputGroup')[index]);
+      var str = "{\"start\":\"";
+      str += $group.find('.timeSlotStart').val() +"\", \"end\":\"";
+      str+= $group.find('.timeSlotEnd').val() + "\", \"num\":" + $group.find('.timeSlotSpots').val() + "}";
+      return str;
+    }
+
     $(document).ready(function(){
-      //do stuff
-      $.get('eventHandler.php', {'all':true}, function(data){
-        if(data.hasOwnProperty('events')){
-          var events = data.events;
-          events.forEach(function(e, i){
-            var $template = $(template);
-            $template.find('.location').text(e[4]);
-            $template.find('a').attr('href', 'event?id=' + e[0]);
-            $('#event-holder').append($template);
-          })
+      placeInputGroups(1);
+      $('#numSlots').change(function(){
+        placeInputGroups($('#numSlots').val());
+      });
+      $('#datetimepicker').datetimepicker({
+        'format':"Y-M-D H:M:S"
+      });
+    });
+
+    $("#file").change(function(){
+        readURL(this);
+    });
+    $('#save').click(function(e){
+      //save the stuff
+      var formData = new FormData();
+      formData.append('image', $('input[type=file]')[0].files[0]);
+      formData.append('title', $('#title').val());
+      formData.append('datetime', $('#datetimepicker').val());
+      formData.append('place', $('#place').val());
+      formData.append('create', 'true');
+      for(var i = 0; i < $('#numSlots').val(); i++){
+        formData.append('slots[]', getSlot(i));
+        console.log(getSlot(i));
+      }
+      $.ajax({
+        'method':'post',
+        'url': 'eventHandler.php',
+        'data':formData,
+        'contentType': false,
+        'processData': false,
+        'success':function(responsedata){
+          if(responsedata.hasOwnProperty('success')){
+            window.location = 'events.php';
+          }
         }
       });
     });

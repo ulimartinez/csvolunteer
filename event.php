@@ -1,16 +1,11 @@
 <?php
   session_start();
-  if(!isset($_SESSION['loggedin']) OR !$_SESSION['loggedin']){
-    header('Location: login.html');
-    exit();
-  }
-  else if($_SESSION['admin']){
-    //is admin
-    $nav = file_get_contents('navbar-admin.php');
+  if(isset($_SESSION['user_id'])){
+    $nav = 'navbar-loggedin.php';
   }
   else {
-    //isnt admin
-    $nav = file_get_contents('navbar-user.php');
+    //isnt logged in
+    $nav = 'navbar-user.php';
   }
   $event_id = $_GET['id'];
   $sql = "SELECT place, date, time FROM events WHERE id = $event_id";
@@ -68,13 +63,13 @@
 <body id="page-top" class="index">
 
   <!-- Navigation -->
-  <?php echo $nav; ?>
+  <?php include $nav; ?>
 
     <section>
       <div class="container">
         <div class="row">
           <h3>Event</h3>
-          <?php if($_SESSION['admin']){
+          <?php if(isset($_SESSION['user_id']) AND $_SESSION['user_type'] == "admin"){
             echo '<div class="row"><div class="btn-group" role="group"><button type="button" class="btn btn-danger">Delete Event</button></div></div>';
           }
           ?>
