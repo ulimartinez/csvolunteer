@@ -11,13 +11,10 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
   //get some stuff
   if(isset($_GET['all'])){
     //return all event info
-    $sql = "SELECT * FROM events WHERE approved = 1";
-    if($_SESSION['admin']){
-      $sql = "SELECT * FROM events";
-    }
+    $sql = "SELECT * FROM students";
     $result = $conn->query($sql);
     if($result){
-      $toReturn['events'] = $result->fetch_all();
+      $toReturn['students'] = $result->fetch_all();
     }
     else{
       $toReturn['error'] = "Couldn't get from database";

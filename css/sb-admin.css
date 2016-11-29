@@ -17,6 +17,10 @@ body {
     }
 }
 
+.image{
+  width: 100%;
+}
+
 #wrapper {
     padding-left: 0;
 }

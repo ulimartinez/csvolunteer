@@ -4,13 +4,9 @@
     header('Location: login.html');
     exit();
   }
-  else if($_SESSION['user_type'] == "admin"){
+  else if($_SESSION['user_type'] === "admin"){
     //is admin
-    $nav = file_get_contents('navbar-admin.php');
-  }
-  else {
-    //isnt admin
-    $nav = file_get_contents('navbar-user.php');
+    $isAdmin = true;
   }
 ?>
 <!DOCTYPE html>
@@ -54,6 +50,60 @@
 </head>
 
 <body id="page-top" class="index">
+  <!-- user modal-->
+  <div class="modal fade" id="userModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">Create User</h4>
+      </div>
+      <div class="modal-body">
+        <form id="userForm" action="studentHandler.php">
+          <div class="form-group">
+            <label for="userName" class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="userName" placeholder="name" name="name">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="saveUser">Save changes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- event modal-->
+<div class="modal fade" id="eventModal">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <h4 class="modal-title">Create Event</h4>
+    </div>
+    <div class="modal-body">
+      <form id="userForm" action="eventHandler.php">
+        <div class="form-group">
+          <label for="eventName" class="col-sm-2 control-label">Name</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="eventName" placeholder="name" name="name">
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      <button type="button" class="btn btn-primary" id="saveUser">Save changes</button>
+    </div>
+  </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
   <!-- Navigation -->
   <?php echo $nav; ?>
@@ -61,9 +111,50 @@
     <section>
       <div class="container">
         <div class="row">
-          <h3>Events</h3>
-          <div id="event-holder"></div>
+          <div class="col-lg-6 col-md-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-user fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge"></div>
+                            <div>Create User</div>
+                        </div>
+                    </div>
+                </div>
+                <a data-toggle="modal" href="#userModal">
+                    <div class="panel-footer">
+                        <span class="pull-left">Start</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+          </div>
+        <div class="col-lg-6 col-md-6">
+          <div class="panel panel-primary">
+              <div class="panel-heading">
+                  <div class="row">
+                      <div class="col-xs-3">
+                          <i class="fa fa-calendar fa-5x"></i>
+                      </div>
+                      <div class="col-xs-9 text-right">
+                          <div>Create Event</div>
+                      </div>
+                  </div>
+              </div>
+              <a data-toggle="modal" href="#eventModal">
+                  <div class="panel-footer">
+                      <span class="pull-left">Start</span>
+                      <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                      <div class="clearfix"></div>
+                  </div>
+              </a>
+          </div>
         </div>
+      </div>
       </div>
     </section>
     <footer>
@@ -131,7 +222,7 @@
           events.forEach(function(e, i){
             var $template = $(template);
             $template.find('.location').text(e[4]);
-            $template.find('a').attr('href', 'event.php?id=' + e[0]);
+            $template.find('a').attr('href', 'event?id=' + e[0]);
             $('#event-holder').append($template);
           })
         }

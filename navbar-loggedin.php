@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -8,7 +9,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand page-scroll" href="index.php#page-top">CSVolunteer</a>
+            <a class="navbar-brand" href="index.php#page-top">CSVolunteer</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -17,22 +18,35 @@
                 <li class="hidden">
                     <a href="#page-top"></a>
                 </li>
-                <li>
-                    <a class="page-scroll" href="events.php">Events</a>
+                <?php
+                if($_SESSION['user_type'] == "admin" OR $_SESSION['user_type'] == "staff"){
+                  echo '<li><a href="students.php">View Students</a></li>';
+                  echo '<li><a href="requests.php">View Requests</a></li>';
+                }
+                else if($_SESSION['user_type'] == "student"){
+                  echo '<li><a href="profile.php?id='.$_SESSION['user_id'].'">My Profile</a></li>';
+                }
+                ?>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Events <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="events.php">View Events</a></li>
+                    <li><a href="create.php">Create Event</a></li>
+                  </ul>
                 </li>
                 <li>
-                    <a class="page-scroll" href="#">Volunteer of the month</a>
+                    <a href="#">Volunteer of the month</a>
                 </li>
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Reports <span class="caret"></span></a>
                   <ul class="dropdown-menu">
-                    <li><a href="#">All events</a></li>
-                    <li><a href="#">All hours</a></li>
-                    <li><a href="#">All students</a></li>
+                    <li><a href="events.php">All events</a></li>
+                    <li><a href="hours.php">All hours</a></li>
+                    <li><a href="students.php">All students</a></li>
                   </ul>
                 </li>
                 <li>
-                  <a class="page-scroll" href="#">Add user</a>
+                  <a class="page-scroll" href="login.php?logout=true">Logout</a>
                 </li>
             </ul>
         </div>

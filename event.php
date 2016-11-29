@@ -1,12 +1,29 @@
 <?php
   session_start();
-  if(isset($_SESSION['user_id'])){
-    $nav = 'navbar-loggedin.php';
+  if(!isset($_SESSION['loggedin']) OR !$_SESSION['loggedin']){
+    header('Location: login.html');
+    exit();
+  }
+  else if($_SESSION['admin']){
+    //is admin
+    $nav = file_get_contents('navbar-admin.php');
   }
   else {
-    //isnt logged in
-    $nav = 'navbar-user.php';
+    //isnt admin
+    $nav = file_get_contents('navbar-user.php');
   }
+  $event_id = $_GET['id'];
+  $sql = "SELECT place, date, time FROM events WHERE id = $event_id";
+  require("config.php");
+  $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE);
+  if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+  }
+  $result = $conn->query($sql);
+  if($result){
+    $data = $result->fetch_all()[0];
+  }
+  $conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -51,18 +68,27 @@
 <body id="page-top" class="index">
 
   <!-- Navigation -->
-  <?php include $nav; ?>
+  <?php echo $nav; ?>
 
-    <!-- Header -->
-    <header>
-        <div class="container">
-            <div class="intro-text">
-                <div class="intro-lead-in">CS Volunteer</div>
-                <div class="intro-heading">Volunteer Oportunities</div>
-                <a href="events.php" class="page-scroll btn btn-xl">Find Events</a>
+    <section>
+      <div class="container">
+        <div class="row">
+          <h3>Event</h3>
+          <?php if($_SESSION['admin']){
+            echo '<div class="row"><div class="btn-group" role="group"><button type="button" class="btn btn-danger">Delete Event</button></div></div>';
+          }
+          ?>
+          <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+              <img src="http://placehold.it/800x400">
+              <h4>Location:</h4> <?php echo $data[0]; ?>
+              <h4>Time:</h4> <?php echo $data[2]; ?>
+              <h4>Date:</h4> <?php echo $data[1]; ?>
             </div>
+          </div>
         </div>
-    </header>
+      </div>
+    </section>
     <footer>
         <div class="container">
             <div class="row">
@@ -108,6 +134,33 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="js/agency.js"></script>
+
+    <script>
+    var template = '<div class="col-sm-6 col-lg-6 col-md-6">'+
+      '<div class="thumbnail">'+
+          '<img src="http://placehold.it/500x300" alt="">'+
+          '<div class="caption">'+
+              '<h4><a href="#" class="title">Some event</a>'+
+              '</h4><small class="location"></small>'+
+              '<p>See more information about this event by clicking <a class="link" href="#">here</a>.</p>'+
+          '</div>'+
+      '</div>'+
+    '</div>';
+    $(document).ready(function(){
+      //do stuff
+      $.get('eventHandler.php', {'all':true}, function(data){
+        if(data.hasOwnProperty('events')){
+          var events = data.events;
+          events.forEach(function(e, i){
+            var $template = $(template);
+            $template.find('.location').text(e[4]);
+            $template.find('a').attr('href', 'event?id=' + e[0]);
+            $('#event-holder').append($template);
+          })
+        }
+      });
+    });
+    </script>
 
 </body>
 

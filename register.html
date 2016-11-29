@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>CSVolunteer</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/sb-admin.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!-- date picker -->
+    <link href="http://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="login-panel panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Please Register.</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form role="form" action="login.php" method="post" enctype="multipart/form-data">
+                          <div class="row">
+                            <div class="col-md-10 col-md-offset-1 text-center">
+                              <img class="image" id="picture" src="assets/default-profile.png" />
+                              <input type="file" id="file" name="file" accept="image/*" style="display: none;" hidden autocomplete="off" />
+                            </div>
+                          </div>
+                            <fieldset>
+                                <div class="form-group">
+                                  <label for="first-name">First Name</label>
+                                    <input class="form-control" id="first-name" placeholder="Ex. John" name="first-name" type="text" required autofocus>
+                                </div>
+                                <div class="form-group">
+                                  <label for="last-name">Last Name</label>
+                                    <input class="form-control" id="last-name" placeholder="Smith" name="last-name" type="text" value="" required>
+                                </div>
+                                <div class="form-group">
+                                  <label for="utep-id">Utep ID</label>
+                                    <input class="form-control" id="utep-id" placeholder="805*****" name="utep-id" type="number" value="" required>
+                                </div>
+                                <div class="form-group">
+                                  <label for="email">email</label>
+                                    <input class="form-control" id="email" placeholder="mail@example.com" name="email" type="text" value="" required>
+                                </div>
+                                <div class="form-group">
+                                  <label for="phone">Phone Number</label>
+                                    <input class="form-control" id="phone" name="phone" type="tel" value="">
+                                </div>
+                                <div class="form-group">
+                                  <label for="class">Classification</label>
+                                  <div class="row">
+                                    <select id="class" class="form-control" name="class">
+                                      <option value="undergraduate">Undergraduate</option>
+                                      <option value="graduate">Graduate</option>
+                                    </select>
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <label for="dob">Birth Date</label>
+                                    <input class="form-control" id="dob" name="dob" type="text" value="" required>
+                                </div>
+                                <hr class="separator">
+                                <div class="form-group">
+                                  <label for="username">Username</label>
+                                    <input class="form-control" id="username" placeholder="username" name="username" type="text" value="" required>
+                                </div>
+                                <div class="form-group">
+                                  <label for="password">Password</label>
+                                    <input class="form-control" id="password" placeholder="password" name="password" type="password" value="" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" id="password2" placeholder="confirm password" name="password2" type="password" value="" required>
+                                </div>
+                                <input type="submit" value="Register" name="register" id="submit" class="btn btn-lg btn-success btn-block">
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- moment -->
+    <script src="js/moment.js"></script>
+    <!--date picker -->
+    <script src="http://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
+
+
+    <script>
+      $('#dob').datetimepicker({
+        'viewMode':'decades',
+        'minDate':"1960",
+        'maxDate':moment(),
+        'format':"Y-M-D"
+      });
+      $('#picture').click(function(e){
+        $('#file').click();
+      });
+      function readURL(input) {
+        if (input.files && input.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            $('#picture').attr('src', e.target.result);
+          }
+
+          reader.readAsDataURL(input.files[0]);
+        }
+      }
+
+      $("#file").change(function(){
+          readURL(this);
+      });
+      //$("#dob").attr('readonly', 'readonly');
+    </script>
+
+</body>
+
+</html>

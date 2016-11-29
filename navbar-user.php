@@ -8,7 +8,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand page-scroll" href="index.php#page-top">CSVolunteer</a>
+            <a class="navbar-brand" href="index.php#page-top">CSVolunteer</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -18,18 +18,21 @@
                     <a href="#page-top"></a>
                 </li>
                 <li>
-                    <a class="page-scroll" href="events.php">Events</a>
+                    <a href="events.php">Events</a>
                 </li>
                 <li>
-                    <a class="page-scroll" href="#">Volunteer of the month</a>
+                    <a href="#">Volunteer of the month</a>
                 </li>
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Reports <span class="caret"></span></a>
                   <ul class="dropdown-menu">
-                    <li><a href="#">All events</a></li>
-                    <li><a href="#">All hours</a></li>
-                    <li><a href="#">All students</a></li>
+                    <li><a href="events.php">All events</a></li>
+                    <li><a href="hours.php">All hours</a></li>
+                    <li><a href="students.php">All students</a></li>
                   </ul>
+                </li>
+                <li>
+                  <a href="login.html">Login</a>
                 </li>
             </ul>
         </div>

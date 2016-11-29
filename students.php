@@ -1,11 +1,16 @@
 <?php
   session_start();
-  if(isset($_SESSION['user_id'])){
-    $nav = 'navbar-loggedin.php';
+  if(!isset($_SESSION['loggedin']) OR !$_SESSION['loggedin']){
+    header('Location: login.html');
+    exit();
+  }
+  else if($_SESSION['admin']){
+    //is admin
+    $nav = file_get_contents('navbar-admin.php');
   }
   else {
-    //isnt logged in
-    $nav = 'navbar-user.php';
+    //isnt admin
+    $nav = file_get_contents('navbar-user.php');
   }
 ?>
 <!DOCTYPE html>
@@ -51,18 +56,16 @@
 <body id="page-top" class="index">
 
   <!-- Navigation -->
-  <?php include $nav; ?>
+  <?php echo $nav; ?>
 
-    <!-- Header -->
-    <header>
-        <div class="container">
-            <div class="intro-text">
-                <div class="intro-lead-in">CS Volunteer</div>
-                <div class="intro-heading">Volunteer Oportunities</div>
-                <a href="events.php" class="page-scroll btn btn-xl">Find Events</a>
-            </div>
+    <section>
+      <div class="container">
+        <div class="row">
+          <h3>Students</h3>
+          <div id="student-holder"></div>
         </div>
-    </header>
+      </div>
+    </section>
     <footer>
         <div class="container">
             <div class="row">
@@ -108,6 +111,36 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="js/agency.js"></script>
+
+    <script>
+    var template = '<div class="col-sm-4 col-lg-4 col-md-4">'+
+      '<div class="thumbnail">'+
+          '<img src="http://placehold.it/150x200" alt="">'+
+          '<div class="caption">'+
+              '<h4><a href="#" class="fname">Some student</a>'+
+              '</h4><small class="lname"></small>'+
+              '<p><a class="mail" href="mailto:"></a></p>'+
+          '</div>'+
+      '</div>'+
+    '</div>';
+    $(document).ready(function(){
+      //do stuff
+      $.get('studentHandler.php', {'all':true}, function(data){
+        if(data.hasOwnProperty('students')){
+          var students = data.students;
+          students.forEach(function(e, i){
+            var $template = $(template);
+            $template.find('.fname').text(e[1]);
+            $template.find('.lname').text(e[2]);
+            $template.find('a').attr('href', 'student.php?id=' + e[0]);
+            $template.find('.mail').text(e[8]);
+            $template.find('.mail').attr('href', "mailto:"+e[8]);
+            $('#student-holder').append($template);
+          })
+        }
+      });
+    });
+    </script>
 
 </body>
 

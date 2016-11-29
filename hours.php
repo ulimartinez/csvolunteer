@@ -1,12 +1,25 @@
 <?php
   session_start();
-  if(isset($_SESSION['user_id'])){
-    $nav = 'navbar-loggedin.php';
+  if(!isset($_SESSION['loggedin']) OR !$_SESSION['loggedin']){
+    header('Location: login.html');
+    exit();
+  }
+  else if($_SESSION['admin']){
+    //is admin
+    $nav = file_get_contents('navbar-admin.php');
   }
   else {
-    //isnt logged in
-    $nav = 'navbar-user.php';
+    //isnt admin
+    $nav = file_get_contents('navbar-user.php');
   }
+  require("config.php");
+  $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE);
+  if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+  }
+  $sql = "SELECT SUM(hours) AS all_hours FROM students";
+  $result = $conn->query($sql);
+  $hours = $result->fetch_array()[0];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -51,18 +64,13 @@
 <body id="page-top" class="index">
 
   <!-- Navigation -->
-  <?php include $nav; ?>
+  <?php echo $nav; ?>
 
-    <!-- Header -->
-    <header>
-        <div class="container">
-            <div class="intro-text">
-                <div class="intro-lead-in">CS Volunteer</div>
-                <div class="intro-heading">Volunteer Oportunities</div>
-                <a href="events.php" class="page-scroll btn btn-xl">Find Events</a>
-            </div>
-        </div>
-    </header>
+    <section>
+      <div class="container">
+        <div class="row">
+          <h3>Total number of hours: </h3> <?php echo $hours; ?>
+    </section>
     <footer>
         <div class="container">
             <div class="row">
@@ -108,6 +116,7 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="js/agency.js"></script>
+
 
 </body>
 
