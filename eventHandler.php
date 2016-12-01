@@ -90,6 +90,19 @@ else if($_SERVER['REQUEST_METHOD'] == 'POST'){
             if($conn->query($sql)){
               $insert_id = $conn->insert_id;
               finishEventCreate($insert_id, $slots, $skills);
+              $page_access_token = "EAARH5GXZC14QBAE38mpN6CHwVelQmAv4g89TlEFsi5sRoaMsPjz7dePErI1usFBLCBfDh9y7LLSCe8ksh9nFBuqG5c4WTWJ0eEX5FaeelkeYssZCEKY5TK9BkKEnRRIHIZAY6vRkgfGMUXmNqdVYrgwt7kVY8Lc0bPcBmTiWAZDZD";
+              $page_id = "987932044645133";
+              $data['link'] = "martechnologic.com/event.php?id=".$insert_id;
+              $data['message'] = $description;
+              $data['access_token'] = $page_access_token;
+              $post_url = 'https://graph.facebook.com/'.$page_id.'/feed';
+              $ch = curl_init();
+              curl_setopt($ch, CURLOPT_URL, $post_url);
+              curl_setopt($ch, CURLOPT_POST, 1);
+              curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+              curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+              $return = curl_exec($ch);
+              curl_close($ch);
             }
           }
           else{
