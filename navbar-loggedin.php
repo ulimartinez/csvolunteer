@@ -24,7 +24,7 @@
                   echo '<li><a href="requests.php">View Requests</a></li>';
                 }
                 else if($_SESSION['user_type'] == "student"){
-                  echo '<li><a href="profile.php?id='.$_SESSION['user_id'].'">My Profile</a></li>';
+                  echo '<li><a href="student.php?id='.$_SESSION['user_id'].'">My Profile</a></li>';
                 }
                 ?>
                 <li class="dropdown">

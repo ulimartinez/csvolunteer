@@ -88,6 +88,7 @@ else if($_SERVER['REQUEST_METHOD'] == 'POST'){
             }
 
             if($conn->query($sql)){
+	      $toReturn['sql'] = $sql;
               $insert_id = $conn->insert_id;
               finishEventCreate($insert_id, $slots, $skills);
             }
@@ -95,6 +96,7 @@ else if($_SERVER['REQUEST_METHOD'] == 'POST'){
           else{
             $sql = "INSERT INTO events (title, date, time, place, approved, photo, description, student_utep_id) VALUES('$title', '$date', '$time', '$place', 0, '".$conn->real_escape_string(file_get_contents($tmp_name))."', '$description', ".$_SESSION['user_id'].")";
             if($conn->query($sql)){
+	      $toReturn['sql'] = $sql;
               $insert_id = $conn->insert_id;
               finishEventCreate($insert_id, $slots, $skills);
             }
