@@ -49,6 +49,16 @@
 </head>
 
 <body id="page-top" class="index">
+  <div id="fb-root"></div>
+  <script>
+    (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8&appId=1204946196223876";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+  </script>
 
   <!-- Navigation -->
   <?php include $nav; ?>
@@ -63,6 +73,14 @@
             </div>
         </div>
     </header>
+    <section>
+      <div class="container">
+        <div class="col-md-8">Something in here</div>
+        <div class="col-md-4">
+          <div class="fb-page" data-href="https://www.facebook.com/CS-Volunteering-Events-987932044645133" data-tabs="timeline" data-width="900" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="https://www.facebook.com/CS-Volunteering-Events-987932044645133" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/CS-Volunteering-Events-987932044645133">CS Volunteering Events</a></blockquote></div>
+        </div>
+      </div>
+    </section>
     <footer>
         <div class="container">
             <div class="row">

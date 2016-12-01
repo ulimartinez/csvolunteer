@@ -98,7 +98,9 @@
                       </li>
                       <li class=""><a href="#service-three" data-toggle="tab"><i class="fa fa-list"></i> Time Slots</a>
                       </li>
-                      <li class=""><a href="#service-four" data-toggle="tab"><i class="fa fa-ellipsis-v"></i> Skills</a>
+                      <li class=""><a href="#service-four" data-toggle="tab"><i class="fa fa-list"></i> Skills</a>
+                      </li>
+                      <li class=""><a href="#service-five" data-toggle="tab"><i class="fa fa-ellipsis-v"></i> Description</a>
                       </li>
                   </ul>
 
@@ -116,6 +118,21 @@
                           	</div>
                           </form>
                       </div>
+                      <div class="tab-pane fade" id="service-two">
+          							<h4>Date &amp; Time</h4>
+          							<div class="container">
+          								<div class="row">
+          									<div class='col-sm-6'>
+          										<div class="form-group">
+          											<div class='input-group date'>
+          												<input type='text' class="form-control" id="datetimepicker" />
+          												<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span> </span>
+          											</div>
+          										</div>
+          									</div>
+          								</div>
+          							</div>
+          						</div>
                       <div class="tab-pane fade" id="service-three">
                           <h4>Time Slots</h4>
                           <form>
@@ -126,7 +143,7 @@
                             	</div>
                             </div>
                             <div id="slotsWrapper">
-                          	<div class="row slotsInputGroup">
+                          	  <div class="row slotsInputGroup">
                             		<div class="form-group col-sm-5">
                                   <div class="input-group">
                                     <span class="input-group-addon">Start</span>
@@ -149,24 +166,28 @@
                             </div>
                           </form>
                       </div>
-                      <div class="tab-pane fade" id="service-two">
-  							<h4>Date &amp; Time</h4>
-  							<div class="container">
-  								<div class="row">
-  									<div class='col-sm-6'>
-  										<div class="form-group">
-  											<div class='input-group date'>
-  												<input type='text' class="form-control" id="datetimepicker" />
-  												<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span> </span>
-  											</div>
-  										</div>
-  									</div>
-  								</div>
-  							</div>
-  						</div>
                       <div class="tab-pane fade" id="service-four">
                           <h4>Skills Required</h4>
-                          <textarea class="form-control" placeholder="skill1, skill2, skill3..." rows="3" id="description"></textarea>
+                          <form>
+                            <div id="skillsWrapper">
+                          	  <div class="row skillsInputGroup">
+                            		<div class="form-group col-sm-12">
+                                  <div class="input-group">
+                                    <input type="text" class="form-control skillText">
+                                    <div class="input-group-btn">
+                                      <!-- Buttons -->
+                                      <button class="btn btn-success addSkill" type="button">+</button>
+                                      <button class="btn btn-danger removeSkill" type="button">-</button>
+                                    </div>
+                                  </div><!-- /input-group -->
+                                </div>
+                            	</div>
+                            </div>
+                          </form>
+                      </div>
+                      <div class="tab-pane fade" id="service-five">
+                          <h4>Skills Required</h4>
+                          <textarea class="form-control" placeholder="event description..." rows="3" id="description"></textarea>
                       </div>
                   </div>
 
@@ -286,6 +307,10 @@
       str+= $group.find('.timeSlotEnd').val() + "\", \"num\":" + $group.find('.timeSlotSpots').val() + "}";
       return str;
     }
+    function getSkill(index){
+      var $group = $($('#skillsWrapper').children('.skillsInputGroup')[index]);
+      return $group.find('.skillText').val()
+    }
 
     $(document).ready(function(){
       placeInputGroups(1);
@@ -294,6 +319,17 @@
       });
       $('#datetimepicker').datetimepicker({
         'format':"Y-M-D H:M:S"
+      });
+      $('#skillsWrapper').delegate('.addSkill', 'click', function(e){
+        //add a skill
+        var $template = $($('#skillsWrapper').children('.skillsInputGroup')[0]);
+        $template.clone().appendTo('#skillsWrapper');
+      });
+      $('#skillsWrapper').delegate('.removeSkill', 'click', function(e){
+        //remove a skill
+        if($('#skillsWrapper').children('.skillsInputGroup').length > 1){
+          $(this).closest('.skillsInputGroup').remove();
+        }
       });
     });
 
@@ -307,10 +343,13 @@
       formData.append('title', $('#title').val());
       formData.append('datetime', $('#datetimepicker').val());
       formData.append('place', $('#place').val());
+      formData.append('description', $('#description').val());
       formData.append('create', 'true');
       for(var i = 0; i < $('#numSlots').val(); i++){
         formData.append('slots[]', getSlot(i));
-        console.log(getSlot(i));
+      }
+      for(var i = 0; i < $('#skillsWrapper').children('.skillsInputGroup').length; i++){
+        formData.append('skills[]', getSkill(i));
       }
       $.ajax({
         'method':'post',

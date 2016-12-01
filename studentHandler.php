@@ -14,7 +14,12 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
     $sql = "SELECT * FROM students";
     $result = $conn->query($sql);
     if($result){
-      $toReturn['students'] = $result->fetch_all();
+      $toReturn['students'] = array();
+      $rows = $result->fetch_all();
+      foreach ($rows as $row) {
+        $row[11] = base64_encode($row[11]);
+        array_push($toReturn['students'], $row);
+      }
     }
     else{
       $toReturn['error'] = "Couldn't get from database";

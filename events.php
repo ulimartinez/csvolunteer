@@ -31,6 +31,8 @@
     <!-- Custom CSS -->
     <link href="css/agency.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet">
+    <!-- date picker -->
+    <link href="http://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css" rel="stylesheet" type="text/css">
 
     <!-- Custom Fonts -->
     <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -55,6 +57,24 @@
 
     <section>
       <div class="container">
+        <div class="row">
+          <div class="col-md-4 col-md-offset-2">
+            <div class="form-group">
+              <div class='input-group date'>
+                <input type='text' class="form-control" id="from" />
+                <span class="input-group-addon">From</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <div class='input-group date'>
+                <input type='text' class="form-control" id="to" disabled=""/>
+                <span class="input-group-addon">To</span>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="row">
           <h3>Events</h3>
           <div id="event-holder"></div>
@@ -106,30 +126,77 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="js/agency.js"></script>
+    <!--date picker -->
+    <script src='js/moment.js'></script>
+    <script src="http://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
 
     <script>
     var template = '<div class="col-sm-6 col-lg-6 col-md-6">'+
       '<div class="thumbnail">'+
-          '<img src="http://placehold.it/500x300" alt="">'+
+          '<img src="http://placehold.it/500x300" class="ev-img" alt="">'+
           '<div class="caption">'+
               '<h4><a href="#" class="title">Some event</a>'+
-              '</h4><small class="location"></small>'+
+              '</h4><small class="location"></small><small> on </small><small class="date"></small>'+
+              '<p class="description"></p>'+
               '<p>See more information about this event by clicking <a class="link" href="#">here</a>.</p>'+
           '</div>'+
       '</div>'+
     '</div>';
     $(document).ready(function(){
+      $('#from').datetimepicker({
+        'format':"Y-M-D"
+      });
+      $('#to').datetimepicker({
+        'format':"Y-M-D",
+        'useCurrent':false
+      });
+      $("#from").on("dp.change", function (e) {
+        $('#to').removeProp('disabled');
+            $('#to').data("DateTimePicker").minDate(e.date);
+        });
+        $("#to").on("dp.change", function (e) {
+            $('#from').data("DateTimePicker").maxDate(e.date);
+            $.get('eventHandler.php', {'range':true, 'start':$('#from').val(), 'end':$('#to').val()}, function(data){
+              if(data.hasOwnProperty('events')){
+                $('#event-holder').empty();
+                var events = data.events;
+                events.forEach(function(e, i){
+                  var $template = $(template);
+                  $template.find('.location').text(e[5]);
+                  $template.find('.date').text(e[3]);
+                  $template.find('.title').text(e[1]);
+                  $template.find('a').attr('href', 'event.php?id=' + e[0]);
+                  if(e[14]!= null){
+                    $template.find('.description').text(e[14]);
+                  }
+                  if(e[13] !== ""){
+                    $template.find('img').attr('src', "data:image/png;base64," + e[13]);
+                  }
+                  $('#event-holder').append($template);
+                });
+              }
+            });
+        });
       //do stuff
       $.get('eventHandler.php', {'all':true}, function(data){
         if(data.hasOwnProperty('events')){
           var events = data.events;
           events.forEach(function(e, i){
             var $template = $(template);
-            $template.find('.location').text(e[5]);
+            $template.find('.location').text(e[3]);
+            $template.find('.date').text(e[2]);
             $template.find('.title').text(e[1]);
             $template.find('a').attr('href', 'event.php?id=' + e[0]);
+            if(e[4]!= null){
+              $template.find('.description').text(e[4]);
+            }
+            $.get('eventHandler.php', {"image":true, "event_id":e[0]}, function(data2){
+              if(data2.photo !== ""){
+                $template.find('img').attr('src', "data:image/png;base64," + data2.photo);
+              }
+            });
             $('#event-holder').append($template);
-          })
+          });
         }
       });
     });

@@ -1,16 +1,12 @@
 <?php
   session_start();
-  if(!isset($_SESSION['loggedin']) OR !$_SESSION['loggedin']){
+  if(!isset($_SESSION['user_id'])){
     header('Location: login.html');
     exit();
   }
-  else if($_SESSION['admin']){
-    //is admin
-    $nav = file_get_contents('navbar-admin.php');
-  }
   else {
     //isnt admin
-    $nav = file_get_contents('navbar-user.php');
+    $nav = 'navbar-loggedin.php';
   }
 ?>
 <!DOCTYPE html>
@@ -56,7 +52,7 @@
 <body id="page-top" class="index">
 
   <!-- Navigation -->
-  <?php echo $nav; ?>
+  <?php include $nav; ?>
 
     <section>
       <div class="container">
@@ -115,7 +111,7 @@
     <script>
     var template = '<div class="col-sm-4 col-lg-4 col-md-4">'+
       '<div class="thumbnail">'+
-          '<img src="http://placehold.it/150x200" alt="">'+
+          '<img src="assets/default-profile.png" class="prof-img" alt="">'+
           '<div class="caption">'+
               '<h4><a href="#" class="fname">Some student</a>'+
               '</h4><small class="lname"></small>'+
@@ -133,8 +129,11 @@
             $template.find('.fname').text(e[1]);
             $template.find('.lname').text(e[2]);
             $template.find('a').attr('href', 'student.php?id=' + e[0]);
-            $template.find('.mail').text(e[8]);
-            $template.find('.mail').attr('href', "mailto:"+e[8]);
+            $template.find('.mail').text(e[9]);
+            $template.find('.mail').attr('href', "mailto:"+e[9]);
+            if(e[11]!==""){
+              $template.find('img').attr('src', "data:image/png;base64," + e[11]);
+            }
             $('#student-holder').append($template);
           })
         }

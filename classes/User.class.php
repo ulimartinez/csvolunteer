@@ -21,7 +21,7 @@ class User{
         }
         return false;
     }
-    public function register($fname, $lname, $id, $phone, $dob, $email, $class, $password2, $tmp_name){
+    public function register($fname, $lname, $id, $phone, $dob, $email, $class, $password2){
       include('utils.php');
       if(checkEmpty($fname) OR checkEmpty($lname) OR checkEmpty($id) OR checkEmpty($dob) OR checkEmpty($email) OR checkEmpty($password2)){
         echo "Must imput all values";
@@ -54,14 +54,10 @@ class User{
         $dob = $conn->real_escape_string($dob);
         $phone = $conn->real_escape_string($phone);
         $username = $conn->real_escape_string($this->_username);
-        if(checkEmpty($tmp_name)){
-          $sql = "INSERT INTO students (utep_id, first_name, last_name, phone_number, username, password, salt, email, classification, dob) VALUES($id, '$fname', '$lname', '$phone', '$username', '$password2', '$salt', '$email', '$class', '$dob')";
-        }
-        else{
-          $sql = "INSERT INTO students (utep_id, first_name, last_name, phone_number, username, password, salt, email, classification, dob, photo) VALUES($id, '$fname', '$lname', '$phone', '$username', '$password2', '$salt', '$email', '$class', '$dob', '" . $conn->real_escape_string(file_get_contents($tmp_name)) ."')";
-        }
+
+        $sql = "INSERT INTO students (utep_id, first_name, last_name, phone_number, username, password, salt, email, classification, dob) VALUES($id, '$fname', '$lname', '$phone', '$username', '$password2', '$salt', '$email', '$class', '$dob')";
         if($conn->query($sql)){
-          return login();
+          return $this->login();
         }
         else{
           echo "something went wrong";
@@ -71,10 +67,14 @@ class User{
     }
 
     public function addImage($filename){
-      echo "<br/>";
-      print_r($this->getUser());
-      //$sql = "UPDATE students SET photo = '" . mysql_escape_string(file_get_contents($filename)) . "' WHERE utep_id = " . $this->_user['utep_id'];
-      //echo $sql;
+      require('config.php');
+      $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE);
+      if ($conn -> connect_error) {
+          die("Connection failed: " . $conn -> connect_error);
+      }
+      $sql = "UPDATE students SET photo = '" . $conn->real_escape_string(file_get_contents($filename)) . "' WHERE utep_id = " . $this->_user['id'];
+      return $conn->query($sql);
+      $conn->close();
     }
 
     protected function _checkCredentials(){

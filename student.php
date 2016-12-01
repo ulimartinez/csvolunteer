@@ -1,14 +1,21 @@
 <?php
   session_start();
-  if(isset($_SESSION['user_id'])){
+  if(!isset($_SESSION['user_id']) OR !isset($_GET['id'])){
+    //isnt logged in or invalid get parameters
+    header('Location: login.html');
+    exit();
+  }
+  else if($_SESSION['user_id'] == $_GET['id'] OR $_SESSION['user_type'] == "admin" OR $_SESSION['user_type'] == "staff"){
+    //able to view
     $nav = 'navbar-loggedin.php';
   }
   else {
-    //isnt logged in
-    $nav = 'navbar-user.php';
+    //user not viewing own profile or not admin or staff
+    header('Location: login.html');
+    exit();
   }
-  $event_id = $_GET['id'];
-  $sql = "SELECT * FROM events WHERE id = $event_id";
+  $student_id = $_GET['id'];
+  $sql = "SELECT * FROM students WHERE utep_id = $student_id";
   require("config.php");
   $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE);
   if ($conn->connect_error) {
@@ -67,55 +74,25 @@
     <section>
       <div class="container">
         <div class="row">
-          <h3>Event</h3>
+          <h3><?php echo  $data['first_name'] . " " . $data['last_name']?></h3>
           <div class="row">
             <div class="col-md-10 col-md-offset-1">
               <?php if($data['photo']){
-                echo '<img class="ev-img-full" src="data:image/png;base64,'.base64_encode($data['photo']).'">';
+                echo '<img class="prof-img-full" src="data:image/png;base64,'.base64_encode($data['photo']).'">';
               }
               else{
-                echo '<img src="http://placehold.it/800x400">';
-              }
-              $sql = "SELECT skill FROM event_skills WHERE event_id=$event_id";
-              $result = $conn->query($sql);
-              if($result){
-                foreach ($result->fetch_all() as $skill) {
-                  echo '<span class="badge">'.$skill[0].'</span>';
-                }
+                echo '<img src="assets/default-profile.png">';
               }
               ?>
-              <h4>Location:</h4> <?php echo $data['place']; ?>
-              <h4>Time:</h4> <?php echo $data['time']; ?>
-              <h4>Date:</h4> <?php echo $data['date']; ?>
-              <h4>Description:</h4> <?php echo $data['description']; ?>
+              <h4>Phone Number:</h4> <?php echo $data['phone_number']; ?>
+              <h4>Birthdate:</h4> <?php echo $data['dob']; ?>
+              <h4>email:</h4> <?php echo $data['email']; ?>
+              <h4>Total Hours:</h4> <?php echo $data['hours']; ?>
             </div>
-          </div>
-          <div class="row">
-              <?php
-              if(isset($_SESSION['user_id']) AND $_SESSION['user_type'] == "student"){
-                echo '<table class="table table-striped">
-                  <thead>
-                    <td>Start Time</td>
-                    <td>End Time</td>
-                    <td>Hours</td>
-                    <td>Participate</td>
-                  </thead>';
-                $sql = "SELECT * FROM time_slots WHERE event_id=$event_id";
-                $result = $conn->query($sql);
-                if($result){
-                  $rows = $result->fetch_all();
-                  foreach ($rows as $row) {
-                    echo '<tr data-timeid="'.$row[0].'" data-eventid="'.$row[2].'"><td>'.$row[1].'</td><td>'.$row[5].'</td><td class="hours">'.$row[6].'</td><td><button type="button" class="btn btn-success participate">Participate</button></td></tr>';
-                  }
-                }
-                echo '</table>';
-              }
-
-              ?>
           </div>
         </div>
         <?php if(isset($_SESSION['user_id']) AND $_SESSION['user_type'] == "admin"){
-          echo '<div class="row"><div class="btn-group col-md-offset-9" role="group"><button type="button" class="btn btn-danger">Delete Event</button></div></div>';
+          echo '<div class="row"><div class="btn-group col-md-offset-9" role="group"><button type="button" class="btn btn-danger">Delete User</button></div></div>';
         }
         ?>
       </div>
@@ -166,19 +143,6 @@
     <!-- Custom Theme JavaScript -->
     <script src="js/agency.js"></script>
     <script>
-    $('.participate').click(function(e){
-      var eventId = $(this).closest('tr').data('eventid');
-      var timeId = $(this).closest('tr').data('timeid');
-      var userId = <?php echo $_SESSION['user_id']; ?>;
-      $.post('eventHandler.php', {'participate':true, 'eventid':eventId, 'timeid':timeId, 'userid':userId, 'hours':$(this).closest('td').siblings('.hours').text()}, function(data){
-        if(data.hasOwnProperty('success')){
-          alert("You are now participating in this event");
-        }
-        else if(data.hasOwnProperty('error')){
-          alert(data.error);
-        }
-      });
-    });
     </script>
 
 </body>
