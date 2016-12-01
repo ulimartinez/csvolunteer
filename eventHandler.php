@@ -10,6 +10,7 @@ function finishEventCreate($id, $slots, $skills){
     $arr['success'] = "event created";
     header('Content-Type: application/json');
     echo json_encode($arr);
+    exit();
   }
 }
 $toReturn = array();

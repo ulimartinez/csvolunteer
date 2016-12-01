@@ -318,7 +318,7 @@
         placeInputGroups($('#numSlots').val());
       });
       $('#datetimepicker').datetimepicker({
-        'format':"Y-M-D H:M:S"
+        'format':"Y-MM-D H:M:S"
       });
       $('#skillsWrapper').delegate('.addSkill', 'click', function(e){
         //add a skill
