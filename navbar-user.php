@@ -23,14 +23,6 @@
                 <li>
                     <a href="#">Volunteer of the month</a>
                 </li>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Reports <span class="caret"></span></a>
-                  <ul class="dropdown-menu">
-                    <li><a href="events.php">All events</a></li>
-                    <li><a href="hours.php">All hours</a></li>
-                    <li><a href="students.php">All students</a></li>
-                  </ul>
-                </li>
                 <li>
                   <a href="login.html">Login</a>
                 </li>

@@ -80,7 +80,12 @@ else if($_SERVER['REQUEST_METHOD'] == 'POST'){
           //it is indeed an image
           $tmp_name = $_FILES['image']['tmp_name'];
           if($_SESSION['user_type'] == "admin" OR $_SESSION['user_type'] == "staff"){
-            $sql = "INSERT INTO events (title, date, time, place, approved, photo, description) VALUES('$title', '$date', '$time', '$place', 1, '".$conn->real_escape_string(file_get_contents($tmp_name))."', '$description')";
+            if($_SESSION['user_type'] == "staff"){
+              $sql = "INSERT INTO events (title, date, time, place, approved, photo, description, sf_creator_id) VALUES('$title', '$date', '$time', '$place', 1, '".$conn->real_escape_string(file_get_contents($tmp_name))."', '$description', ".$_SESSION['user_id'].")";
+            }
+            else{
+              $sql = "INSERT INTO events (title, date, time, place, approved, photo, description) VALUES('$title', '$date', '$time', '$place', 1, '".$conn->real_escape_string(file_get_contents($tmp_name))."', '$description')";
+            }
 
             if($conn->query($sql)){
               $insert_id = $conn->insert_id;
@@ -88,7 +93,7 @@ else if($_SERVER['REQUEST_METHOD'] == 'POST'){
             }
           }
           else{
-            $sql = "INSERT INTO events (title, date, time, place, approved, photo, description) VALUES('$title', '$date', '$time', '$place', 0, '".$conn->real_escape_string(file_get_contents($tmp_name))."', '$description')";
+            $sql = "INSERT INTO events (title, date, time, place, approved, photo, description, student_utep_id) VALUES('$title', '$date', '$time', '$place', 0, '".$conn->real_escape_string(file_get_contents($tmp_name))."', '$description', ".$_SESSION['user_id'].")";
             if($conn->query($sql)){
               $insert_id = $conn->insert_id;
               finishEventCreate($insert_id, $slots, $skills);
@@ -108,7 +113,12 @@ else if($_SERVER['REQUEST_METHOD'] == 'POST'){
     }
     else{
       if($_SESSION['user_type'] == 'admin' OR $_SESSION['user_type'] == "staff"){
-        $sql = "INSERT INTO events (title, date, time, place, approved, description) VALUES('$title', '$date', '$time', '$place', 1, '$description')";
+        if($_SESSION['user_type'] == "staff"){
+          $sql = "INSERT INTO events (title, date, time, place, approved, description, sf_creator_id) VALUES('$title', '$date', '$time', '$place', 1, '$description', ".$_SESSION['user_id'].")";
+        }
+        else{
+          $sql = "INSERT INTO events (title, date, time, place, approved, description, student_utep_id) VALUES('$title', '$date', '$time', '$place', 1, '$description', ".$_SESSION['user_id'].")";
+        }
         if($conn->query($sql)){
           $insert_id = $conn->insert_id;
           finishEventCreate($insert_id, $slots, $skills);
@@ -121,6 +131,17 @@ else if($_SERVER['REQUEST_METHOD'] == 'POST'){
           finishEventCreate($insert_id, $slots, $skills);
         }
       }
+    }
+  }
+  else if(isset($_POST['approve'])){
+    $eventid = $_POST['eventid'];
+    $sql = "UPDATE events SET approved=1 WHERE id = $eventid";
+    $result = $conn->query($sql);
+    if($result){
+      $toReturn['success'] = "approved";
+    }
+    else{
+      $toReturn['error'] = "Something went wrong";
     }
   }
   else if(isset($_POST['participate'])){
@@ -136,6 +157,14 @@ else if($_SERVER['REQUEST_METHOD'] == 'POST'){
     }
     else{
       $toReturn['error'] = "You are already participating in this event";
+    }
+  }
+  else if(isset($_POST['delete'])){
+    $id = $_POST['eventid'];
+    $sql = "DELETE FROM events WHERE id=$id";
+    $result = $conn->query($sql);
+    if($result){
+      $toReturn['success'] = "deleted";
     }
   }
 }

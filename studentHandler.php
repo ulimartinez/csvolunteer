@@ -27,6 +27,14 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
   }
 }
 else if($_SERVER['REQUEST_METHOD'] == 'POST'){
+  if(isset($_POST['delete'])){
+    $id = $_POST['userid'];
+    $sql = "DELETE FROM students WHERE utep_id=$id";
+    $result = $conn->query($sql);
+    if($result){
+      $toReturn['success'] = "Deleted";
+    }
+  }
   //update some stuff
 }
 else if($_SERVER['REQUEST_METHOD'] == 'PUT'){

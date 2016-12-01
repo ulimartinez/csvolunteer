@@ -18,6 +18,12 @@
   if($result){
     $data = $result->fetch_assoc();
   }
+  $sum = 0;
+  $sql = "SELECT SUM(hours) FROM participate WHERE event_id = $event_id";
+  $result = $conn->query($sql);
+  if($result){
+    $sum = $result->fetch_array()[0];
+  }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -88,6 +94,7 @@
               <h4>Time:</h4> <?php echo $data['time']; ?>
               <h4>Date:</h4> <?php echo $data['date']; ?>
               <h4>Description:</h4> <?php echo $data['description']; ?>
+              <h4>Hours volunteered at this event:</h4> <?php echo $sum; ?>
             </div>
           </div>
           <div class="row">
@@ -115,7 +122,7 @@
           </div>
         </div>
         <?php if(isset($_SESSION['user_id']) AND $_SESSION['user_type'] == "admin"){
-          echo '<div class="row"><div class="btn-group col-md-offset-9" role="group"><button type="button" class="btn btn-danger">Delete Event</button></div></div>';
+          echo '<div class="row"><div class="btn-group col-md-offset-9" role="group"><button type="button" class="btn btn-danger" id="delete">Delete Event</button></div></div>';
         }
         ?>
       </div>
@@ -178,6 +185,15 @@
           alert(data.error);
         }
       });
+    });
+    $('#delete').click(function(e){
+      if(confirm("Are you sure you want to delete this event?")){
+        $.post('eventHandler.php', {'delete': true, 'eventid':<?php echo $event_id;?>}, function(data){
+          if(data.hasOwnProperty("success")){
+            window.location = "events.php";
+          }
+        });
+      }
     });
     </script>
 

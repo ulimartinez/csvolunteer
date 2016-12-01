@@ -92,7 +92,7 @@
           </div>
         </div>
         <?php if(isset($_SESSION['user_id']) AND $_SESSION['user_type'] == "admin"){
-          echo '<div class="row"><div class="btn-group col-md-offset-9" role="group"><button type="button" class="btn btn-danger">Delete User</button></div></div>';
+          echo '<div class="row"><div class="btn-group col-md-offset-9" role="group"><button type="button" class="btn btn-danger" id="delete">Delete User</button></div></div>';
         }
         ?>
       </div>
@@ -143,6 +143,15 @@
     <!-- Custom Theme JavaScript -->
     <script src="js/agency.js"></script>
     <script>
+    $('#delete').click(function(e){
+      if(confirm("Are you sure you want to delete this user?")){
+        $.post('studentHandler.php', {'delete': true, 'userid':<?php echo $student_id;?>}, function(data){
+          if(data.hasOwnProperty("success")){
+            window.location = "students.php";
+          }
+        });
+      }
+    });
     </script>
 
 </body>

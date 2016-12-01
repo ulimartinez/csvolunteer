@@ -72,7 +72,7 @@
               <label for="adminpwd" class="col-sm-2 control-label">Password</label>
               <div class="col-sm-10">
                 <input type="password" class="form-control" id="adminpwd" placeholder="name" name="password">
-                <input type="hidden" style="display: none;" name="create" value="admin">
+                <input type="hidden" style="display: none;" name="admin" value="true">
               </div>
             </div>
           </form>
@@ -123,10 +123,53 @@
         </div>
         <div class="modal-body">
           <form id="userForm" action="userHandler.php">
-            <div class="form-group">
-              <label for="userName" class="col-sm-2 control-label">Name</label>
+            <div class="form-group row">
+              <label for="firstName" class="col-md-2 control-label">First Name</label>
+              <div class="col-md-10">
+                <input type="text" class="form-control" id="firstName" placeholder="name" name="firstName">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="lastName" class="col-md-2 control-label">Last Name</label>
+              <div class="col-md-10">
+                <input type="text" class="form-control" id="lastName" placeholder="last name" name="lastName">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="email" class="col-md-2 control-label">email</label>
+              <div class="col-md-10">
+                <input type="text" class="form-control" id="email" placeholder="email" name="email">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="phone" class="col-md-2 control-label">Phone number</label>
+              <div class="col-md-10">
+                <input type="text" class="form-control" id="phone" name="phone">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="utep-id" class="col-md-2 control-label">Utep id</label>
+              <div class="col-md-10">
+                <input type="number" class="form-control" id="utep-id" placeholder="805*****" name="utepid">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="userName" class="col-md-2 control-label">Username</label>
+              <div class="col-md-10">
+                <input type="text" class="form-control" id="userName" placeholder="username" name="username">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="password" class="col-sm-2 control-label">Password</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="userName" placeholder="name" name="name">
+                <input type="password" class="form-control" id="password" name="password">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="password2" class="col-md-2 control-label">Repeat Password</label>
+              <div class="col-md-10">
+                <input type="password" class="form-control" id="password2" name="password2">
+                <input type="hidden" name="staff" value="true" style="display: none"/>
               </div>
             </div>
           </form>
@@ -185,7 +228,7 @@
                         </div>
                     </div>
                 </div>
-                <a data-toggle="modal" href="#studentModal">
+                <a href="register.html">
                     <div class="panel-footer">
                         <span class="pull-left">Create</span>
                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -322,7 +365,13 @@
           	'contentType': false,
           	'processData': false,
           	'success':function(responsedata){
-          		$('#myModal').modal('hide');
+              if(responsedata.hasOwnProperty('success')){
+                $(e).closest('.modal').modal('hide');
+                alert(responsedata.success);
+              }
+              else if(responsedata.hasOwnProperty('error')){
+                alert(responsedata.error);
+              }
           	}
           });
       });

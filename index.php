@@ -7,6 +7,29 @@
     //isnt logged in
     $nav = 'navbar-user.php';
   }
+  require("config.php");
+  $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE);
+  if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+  }
+  $num_events = 0;
+  $num_students = 0;
+  $num_hours = 0;
+  $sql = "SELECT COUNT(*) FROM events WHERE approved=1";
+  $result = $conn->query($sql);
+  if($result){
+    $num_events = $result->fetch_array()[0];
+  }
+  $sql = "SELECT COUNT(*) FROM students";
+  $result = $conn->query($sql);
+  if($result){
+    $num_students = $result->fetch_array()[0];
+  }
+  $sql = "SELECT SUM(hours) FROM students";
+  $result = $conn->query($sql);
+  if($result){
+    $num_hours = $result->fetch_array()[0];
+  }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -75,7 +98,11 @@
     </header>
     <section>
       <div class="container">
-        <div class="col-md-8">Something in here</div>
+        <div class="col-md-8">
+          <h4>Number of Events:</h4><?php echo $num_events; ?>
+          <h4>Number of Students:</h4><?php echo $num_students; ?>
+          <h4>Total hours volunteered:</h4><?php echo $num_hours; ?>
+        </div>
         <div class="col-md-4">
           <div class="fb-page" data-href="https://www.facebook.com/CS-Volunteering-Events-987932044645133" data-tabs="timeline" data-width="900" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="https://www.facebook.com/CS-Volunteering-Events-987932044645133" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/CS-Volunteering-Events-987932044645133">CS Volunteering Events</a></blockquote></div>
         </div>

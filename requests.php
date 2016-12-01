@@ -1,9 +1,27 @@
 <?php
-session_start();
-//rederict user if he hasn't logged in
-if (!(isset($_SESSION['user_id']) OR $_SESSION['user_type'] != "admin")) {
-	header('Location: login.html');
-}
+  session_start();
+  if(!isset($_SESSION['user_id'])){
+    header("Location: login.html");
+    exit();
+  }
+  else if($_SESSION['user_type'] == "admin" OR $_SESSION['user_type'] == "staff"){
+    $nav = 'navbar-loggedin.php';
+  }
+  else{
+    //isnt allowed
+    header("Location: login.html");
+    exit();
+  }
+  require("config.php");
+  $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE);
+  if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+  }
+  $sql = "SELECT * FROM events WHERE approved = 0";
+  $result = $conn->query($sql);
+  if($result){
+    $data = $result->fetch_all();
+  }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -48,54 +66,30 @@ if (!(isset($_SESSION['user_id']) OR $_SESSION['user_type'] != "admin")) {
 <body id="page-top" class="index">
 
   <!-- Navigation -->
-  <?php include 'navbar-loggedin.php'; ?>
+  <?php include $nav; ?>
 
     <section>
       <div class="container">
         <div class="row">
-          <div class="col-lg-6 col-md-6">
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <div class="row">
-                  <div class="col-xs-3">
-                    <i class="fa fa-user fa-5x"></i>
-                  </div>
-                  <div class="col-xs-9 text-right">
-                    <div class="huge"></div>
-                    <div>Create User</div>
-                  </div>
-                </div>
-              </div>
-              <a href="createUser.php">
-                <div class="panel-footer">
-                  <span class="pull-left">Go</span>
-                  <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                  <div class="clearfix"></div>
-                </div>
-              </a>
-            </div>
-          </div>
-					<div class="col-lg-6 col-md-6">
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <div class="row">
-                  <div class="col-xs-3">
-                    <i class="fa fa-calendar fa-5x"></i>
-                  </div>
-                  <div class="col-xs-9 text-right">
-                    <div class="huge"></div>
-                    <div>Create Event</div>
-                  </div>
-                </div>
-              </div>
-              <a href="create.php">
-                <div class="panel-footer">
-                  <span class="pull-left">Go</span>
-                  <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                  <div class="clearfix"></div>
-                </div>
-              </a>
-            </div>
+          <h3>Not Approved Events</h3>
+          <div class="row">
+              <?php
+              if(true){
+                echo '<table class="table table-striped">
+                  <thead>
+                    <td>Event</td>
+                    <td>Date</td>
+                    <td>Location</td>
+                    <td>Creator</td>
+                    <td>Approve</td>
+                  </thead>';
+                  foreach ($data as $row) {
+                    echo '<tr data-eventid="'.$row[0].'"><td>'.$row[1].'</td><td>'.$row[3].'</td><td>'.$row[5].'</td><td><a target="_blank" href="student.php?id='.$row[8].'">View Creator</a></td><td><button type="button" class="btn btn-success approve">Approve</button></td></tr>';
+                  }
+                echo '</table>';
+              }
+
+              ?>
           </div>
         </div>
       </div>
@@ -145,7 +139,22 @@ if (!(isset($_SESSION['user_id']) OR $_SESSION['user_type'] != "admin")) {
 
     <!-- Custom Theme JavaScript -->
     <script src="js/agency.js"></script>
+    <script>
+    $('.approve').click(function(e){
+      var eventId = $(this).closest('tr').data('eventid');
+      $.post('eventHandler.php', {'approve':true, 'eventid':eventId}, function(data){
+        if(data.hasOwnProperty('success')){
+          alert("Event approved");
+          $(this).closest('tr').remove();
+        }
+        else if(data.hasOwnProperty('error')){
+          alert(data.error);
+        }
+      });
+    });
+    </script>
 
 </body>
 
 </html>
+<?php $conn->close(); ?>
