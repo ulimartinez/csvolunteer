@@ -15,7 +15,7 @@ class TimeSlot{
          $this->_end = $data['end'];
        }
        $this->_spots = $data['num'];
-       $this->_hours = intdiv($end_time - $start_time, 3600);
+       $this->_hours = floor(($end_time - $start_time)/ 3600);
     }
     public function getSQLValues(){
       $str = "(".$this->_event_id.", '".$this->_start."', '".$this->_end."', ".$this->_spots.", 0, ".$this->_hours.")";
